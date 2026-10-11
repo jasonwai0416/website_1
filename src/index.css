@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #0a0a0a;
+  --ink-deep: #050505;
+  --bone: #f4f2ee;
+  --ash: #8a8a86;
+  --ember: #ff4d1c;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --gutter: clamp(1.25rem, 5vw, 5.5rem);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ink text-bone font-display antialiased;
+    margin: 0;
+    overflow-x: hidden;
+    font-optical-sizing: auto;
+    font-synthesis-weight: none;
+  }
+
+  /* Applied only when the custom reticle is active (pointer-fine, motion allowed) */
+  html.cursor-reticle,
+  html.cursor-reticle * {
+    cursor: none;
+  }
+
+  ::selection {
+    background: var(--ember);
+    color: var(--ink);
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--ink-deep);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    padding-inline: var(--gutter);
+    margin-inline: auto;
+    max-width: 1680px;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-mega text-ash;
+  }
+
+  .rule {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+  }
+
+  /* Faint blueprint grid — the "precise grid lines" motif */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 88px 88px;
+  }
+
+  .link-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .btn-ember {
+    @apply relative inline-flex items-center gap-3 overflow-hidden rounded-full px-7 py-3.5
+      font-mono text-[11px] uppercase tracking-[0.28em] text-ink;
+    background: var(--ember);
+    transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-ember::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bone);
+    transform: translateY(101%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+  }
+  .btn-ember:hover::before {
+    transform: translateY(0);
+  }
+  .btn-ember > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-3 rounded-full border px-7 py-3.5
+      font-mono text-[11px] uppercase tracking-[0.28em] text-bone;
+    border-color: var(--line-strong);
+    transition: border-color 0.4s ease, background-color 0.4s ease;
+  }
+  .btn-ghost:hover {
+    border-color: var(--bone);
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  }
+  .will-transform {
+    will-change: transform;
+  }
+}
+
+/* A single, well-orchestrated page load — staggered reveal primitives */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(120%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 42s linear infinite;
+}
+
+.caret {
+  animation: blink-caret 1.05s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
